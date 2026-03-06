@@ -13,7 +13,8 @@ Each version builds on the last, testing a new idea in multi-agent hallucination
 | Version | Description |
 |---------|-------------|
 | `v0.1`  | Single primary agent — baseline factual Q&A with response hashing |
-| `v0.3`  | Full multi-agent discussion framework — 5 agents, configurable topologies (mesh/ring/star), 5 rounds, convergence + influence + deviation tracking |
+| `v0.2`  | Full 12-stage detection pipeline — NLI contradiction layer (DeBERTa-v3), consensus panel judge, weighted adaptive fusion, blockchain audit log, Byzantine adversarial agent, trajectory tracker |
+| `v0.3`  | Multi-agent discussion framework — 5 agents, configurable topologies (mesh/ring/star), 5 rounds, convergence + influence + deviation tracking |
 | `v0.4`  | Simplified re-evaluation loop — 3 agents, triangle topology, 100 rounds, peer hallucination flagging, dark-themed visualisations |
 
 ---

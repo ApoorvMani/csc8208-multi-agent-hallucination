@@ -1,0 +1,88 @@
+# ============================================================
+# HALLUCINATION DETECTION FRAMEWORK — Requirements
+# CSC8208 | Newcastle University | MSc Cybersecurity
+# ============================================================
+# Install: pip install -r requirements.txt
+# ============================================================
+
+# ── CORE — Local LLM (Ollama) ────────────────────────────────
+ollama                        # Local model inference (Mistral, LLaMA, Qwen, etc.)
+
+# ── LAYER 1 — Cosine Similarity ──────────────────────────────
+sentence-transformers         # Sentence embeddings (all-MiniLM-L6-v2)
+scikit-learn                  # Cosine similarity computation
+numpy                         # Matrix operations
+
+# ── LAYER 2 — NLI Contradiction Detection ────────────────────
+transformers                  # DeBERTa-v3 NLI model (HuggingFace)
+torch                         # PyTorch backend for transformers
+
+# ── LAYER 3 — Consensus Panel Judge ──────────────────────────
+# Uses Ollama models already installed above
+# No extra dependencies needed
+
+# ── DATA & EVALUATION ────────────────────────────────────────
+pandas                        # Leaderboard + results tables
+datasets                      # HuggingFace datasets (HaluEval benchmark)
+
+# ── VISUALISATION ────────────────────────────────────────────
+matplotlib                    # All figures (ROC, bar charts, line graphs)
+seaborn                       # Publication-quality styling
+plotly                        # Interactive charts (optional, for report)
+
+# ── BLOCKCHAIN AUDIT LOGGER ──────────────────────────────────
+# Uses Python built-in hashlib — no extra package needed
+
+# ── UTILITIES ────────────────────────────────────────────────
+python-dotenv                 # Environment variable management (API keys)
+tabulate                      # Clean terminal table printing
+tqdm                          # Progress bars for long evaluation runs
+colorama                      # Coloured terminal output
+jsonschema                    # Validate structured JSON from judge layer
+
+# ============================================================
+# FUTURE EXTERNAL API SUPPORT
+# Uncomment when you are ready to use these
+# Store all API keys in a .env file — NEVER hardcode them
+# ============================================================
+
+# ── OpenAI (GPT-4o, GPT-4-turbo, GPT-3.5) ───────────────────
+# openai
+
+# ── Anthropic (Claude 3.5 Sonnet, Claude 3 Opus) ─────────────
+# anthropic
+
+# ── Grok (xAI) ───────────────────────────────────────────────
+# Currently uses OpenAI-compatible API
+# openai  (same package, different base_url)
+
+# ── Google (Gemini Pro, Gemini Flash) ────────────────────────
+# google-generativeai
+
+# ── Mistral API (cloud version) ──────────────────────────────
+# mistralai
+
+# ── Cohere ───────────────────────────────────────────────────
+# cohere
+
+# ── Together AI (hosts many open models via API) ─────────────
+# together
+
+# ── Hugging Face Inference API ───────────────────────────────
+# huggingface_hub
+
+# ============================================================
+# HOW TO ADD AN EXTERNAL API (when ready)
+# ============================================================
+# 1. Uncomment the package above
+# 2. Run: pip install -r requirements.txt
+# 3. Create a .env file in your project root:
+#      OPENAI_API_KEY=sk-...
+#      ANTHROPIC_API_KEY=sk-ant-...
+#      GROK_API_KEY=xai-...
+#      GOOGLE_API_KEY=...
+#      MISTRAL_API_KEY=...
+# 4. In agent_registry.py, set provider="openai" etc.
+#    The agent registry handles routing automatically
+# 5. NEVER commit .env to git — add it to .gitignore
+# ============================================================
