@@ -68,13 +68,17 @@ def parse_response(raw, neighbours):
     return answer, verdicts
 
 
-def run_experiment():
+def run_experiment(question=None, total_rounds=None):
+    # allow callers to override question and rounds — falls back to config values
+    q = question      if question      is not None else QUESTION
+    n = total_rounds  if total_rounds  is not None else TOTAL_ROUNDS
+
     agent_ids = list(AGENTS.keys())  # ["agent_0", "agent_1", "agent_2"]
 
     # results will hold everything — rounds, answers, verdicts, metadata
     results = {
-        "question":     QUESTION,
-        "total_rounds": TOTAL_ROUNDS,
+        "question":     q,
+        "total_rounds": n,
         "rounds":       []
     }
 
@@ -89,7 +93,7 @@ def run_experiment():
 
     for agent_id in agent_ids:
         agent  = AGENTS[agent_id]
-        prompt = build_round1_prompt(QUESTION)
+        prompt = build_round1_prompt(q)
 
         print(f"  querying {agent_id}...")
         raw = query_model(agent["model"], prompt, agent["temperature"])
@@ -108,7 +112,7 @@ def run_experiment():
     results["rounds"].append(round1_data)
 
     # --- rounds 2 to total_rounds — discussion phase ---
-    for round_num in range(2, TOTAL_ROUNDS + 1):
+    for round_num in range(2, n + 1):
         print(f"\n{'='*50}")
         print(f"ROUND {round_num} — discussion")
         print(f"{'='*50}")
