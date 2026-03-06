@@ -1,0 +1,24 @@
+# python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# virtual environment
+venv/
+env/
+.venv/
+
+# experiment outputs — too large to track in git
+v0.3/logs/
+v0.4/results/
+
+# os
+.DS_Store
+Thumbs.db
+
+# ide
+.vscode/
+.idea/
+*.swp
