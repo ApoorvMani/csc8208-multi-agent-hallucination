@@ -21,22 +21,17 @@ def build_discussion_prompt(own_answer, neighbour_answers):
     # start with this agents own previous answer
     prompt = f"Here is your previous answer: {own_answer}\n\n"
 
-    # list each neighbours answer clearly
+    # list each neighbours answer clearly — agents just see the answers, nothing else
     prompt += "Here are other agents' answers:\n"
     for nid, answer in neighbour_answers.items():
         prompt += f"[{nid}]: {answer}\n"
 
-    # ask the agent to re-evaluate and correct itself if wrong
+    # simple re-evaluation instruction — no mention of hallucination
     prompt += "\nRe-evaluate your answer. If you are wrong, correct it.\n"
 
-    # ask the agent to flag hallucinations in each neighbour
-    prompt += "\nAlso, for each other agent, state whether their answer is hallucinating (YES or NO).\n"
-
-    # strict format so we can parse reliably
+    # only ask for the updated answer — no verdicts, no judgement of others
     prompt += "\nFormat your response exactly like this:\n"
     prompt += "ANSWER: [your updated answer]\n"
-    for nid in neighbour_answers:
-        prompt += f"{nid}: YES or NO\n"
 
     return prompt
 
@@ -55,17 +50,12 @@ def query_model(model, prompt, temperature):
 
 
 def parse_response(raw, neighbours):
-    # extract the ANSWER — capture everything between ANSWER: and the first agent verdict line
-    answer_match = re.search(r"ANSWER:\s*(.+?)(?=\n\s*agent_|\Z)", raw, re.IGNORECASE | re.DOTALL)
+    # extract the ANSWER line — everything after ANSWER: until end of string
+    answer_match = re.search(r"ANSWER:\s*(.+)", raw, re.IGNORECASE | re.DOTALL)
     answer = answer_match.group(1).strip() if answer_match else raw.strip()
 
-    # extract YES/NO verdict for each neighbour
-    verdicts = {}
-    for nid in neighbours:
-        verdict_match = re.search(rf"{nid}:\s*(YES|NO)", raw, re.IGNORECASE)
-        verdicts[nid] = verdict_match.group(1).upper() if verdict_match else "UNKNOWN"
-
-    return answer, verdicts
+    # no verdict parsing — agents dont judge each other, we detect from behaviour
+    return answer, {}
 
 
 def run_experiment(question=None, total_rounds=None):
@@ -142,12 +132,11 @@ def run_experiment(question=None, total_rounds=None):
 
             round_data["agents"][agent_id] = {
                 "answer":     answer,
-                "verdicts":   verdicts,   # hallucination YES/NO per neighbour
                 "word_count": len(answer.split()),
                 "changed":    changed
             }
 
-            print(f"  {agent_id}: {'CHANGED' if changed else 'kept'} | verdicts: {verdicts}")
+            print(f"  {agent_id}: {'CHANGED' if changed else 'kept'}")
 
         current_answers = new_answers  # swap in new answers for next round
         results["rounds"].append(round_data)
